@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+
+const http = require('http').Server(app);
 const cors = require('cors')
 const morgan = require('morgan')
 
@@ -24,6 +26,25 @@ app.use('/profile', profileController);
 app.use('/chat', chatController);
 
 
+
+// adding socket io to project server to create real time connection
+const socketIO = require('socket.io')(http, {
+  cors: {
+      origin: "http://localhost:3000"
+  }
+});
+
+//Add this before the app.get() block
+socketIO.on('connection', (socket) => {
+  console.log(`⚡: ${socket.id} user just connected!`);
+  socket.on('disconnect', () => {
+    console.log('🔥: A user disconnected');
+  });
+});
+
+
+
+
 app.get('/', (req, res) => res.redirect('/profile'))
 
-app.listen(PORT, ()=> console.log("on port"))
+http.listen(PORT, ()=> console.log("on port"))
