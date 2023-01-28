@@ -6,6 +6,7 @@ const morgan = require('morgan')
 //controller import
 const authController = require("./controllers/auth");
 const profileController = require('./controllers/profile-controller')
+const chatController = require('./controllers/chat-controller')
 
 require('dotenv').config()
 require('./config/db.connection')
@@ -20,6 +21,7 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use('/auth', authController);
 app.use('/profile', profileController);
+app.use('/chat', chatController);
 
 
 app.get('/', (req, res) => res.redirect('/profile'))

@@ -1,3 +1,4 @@
 module.exports = {
-  Profile: require('./Profile')
+  Profile: require('./Profile'),
+  Chat: require('./Chat')
 }

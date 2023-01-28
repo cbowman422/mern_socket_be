@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 //import model
-// const {Profile} = require('../models')
+// const {Chat} = require('../models')
  const db = require('../models')
  const { handleValidateOwnership, requireToken } = require("../config/auth");
 
@@ -19,8 +19,8 @@ router.use((req, res, next) => {
 // this route will catch GET requests to /products/ and respond with all the products
 router.get('/', async (req, res, next) => { 
 	try {
-			const profile = await db.Profile.find({}).populate('owner', 'username -_id').exec()
-			res.status(200).json(profile)
+			const chat = await db.Chat.find({}).populate('owner', 'username -_id').exec()
+			res.status(200).json(chat)
 	} catch (error) {
 			console.error(error)
 			return next(error)
@@ -32,11 +32,11 @@ router.get('/', async (req, res, next) => {
 // this route will catch GET requests to /products/index/ and respond with a single product
 router.get('/:id', async (req, res, next) => { 
 try {
-	const foundProfile = await db.Profile.findById(req.params.id)
+	const foundChat = await db.Chat.findById(req.params.id)
 	.populate("owner")
 	.exec();
-	console.log(foundProfile)
-	res.status(200).json(foundProfile)
+	console.log(foundChat)
+	res.status(200).json(foundChat)
 } catch (error) {
 	console.error(error)
 	return next(error)
@@ -52,8 +52,8 @@ router.post("/", requireToken, async (req, res, next) => {
 		// passport will verify the the token passed with the request's Authorization headers and set the current user for the request (req.user).
 		const owner = req.user._id
 		req.body.owner = owner
-    const newProfile = await db.Profile.create(req.body);
-    res.status(201).json(newProfile);
+    const newChat = await db.Chat.create(req.body);
+    res.status(201).json(newChat);
   } catch (err) {
     res.status(400).json({
       error: err.message,
@@ -64,13 +64,13 @@ router.post("/", requireToken, async (req, res, next) => {
 // update route (PUT HTTP VERB)
 router.put("/:id", requireToken, async (req, res) => {
 	try {
-		handleValidateOwnership(req, await db.Profile.findById(req.params.id))
-		const updatedProfile = await db.Profile.findByIdAndUpdate(
+		handleValidateOwnership(req, await db.Chat.findById(req.params.id))
+		const updatedChat = await db.Chat.findByIdAndUpdate(
 			req.params.id,
 			req.body,
 			{ new: true }
 		)
-		res.status(200).json(updatedProfile)
+		res.status(200).json(updatedChat)
 	} catch (error) {
 		//send error
 		res.status(400).json({error: error.message})
@@ -80,9 +80,9 @@ router.put("/:id", requireToken, async (req, res) => {
 // destroy route (DELETE HTTP VERB)
 router.delete("/:id", requireToken, async (req, res, next) => {
   try {
-    handleValidateOwnership(req, await db.Profile.findById(req.params.id));
-    const deletedProfile = await db.Profile.findByIdAndRemove(req.params.id);
-    res.status(200).json(deletedProfile);
+    handleValidateOwnership(req, await db.Chat.findById(req.params.id));
+    const deletedChat = await db.Chat.findByIdAndRemove(req.params.id);
+    res.status(200).json(deletedChat);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
