@@ -1,26 +1,29 @@
 const express = require("express");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const { createUserToken, requireToken } = require("../config/auth");
+const { createUserToken } = require("../config/auth");
+
 const router = express.Router();
 
-// SIGN UP - POST HTTP Verb to create a new user and authenticate a user token
-router.post("/register", async (req, res, next) => 
-{
-  try 
-  {
-    // salt is a random seed to make our pw unique 
-    const salt = await bcrypt.genSalt(10);
-    // hash password from req.body
-    const passwordHash = await bcrypt.hash(req.body.password, salt);
-    // we store this temporarily so the origin plain text password can be parsed by the createUserToken();
-    const pwStore = req.body.password;
-    // modify req.body (for storing hash in db)
-    req.body.password = passwordHash;
-    const newUser = await User.create(req.body);
+// routes/controllers here
 
-    if (newUser) 
-    {
+// SIGN UP
+// POST /api/register
+router.post("/register", async (req, res, next) => {
+  //   has the password before storing the user info in the database
+  try {
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(req.body.password, salt);
+
+    const pwStore = req.body.password;
+    // we store this temporarily so the origin plain text password can be parsed by the createUserToken();
+
+    req.body.password = passwordHash;
+    // modify req.body (for storing hash in db)
+
+    const newUser = await User.create(req.body);
+    if (newUser) {
       req.body.password = pwStore;
       const authenticatedUserToken = createUserToken(req, newUser);
       res.status(201).json({
@@ -28,8 +31,7 @@ router.post("/register", async (req, res, next) =>
         isLoggedIn: true,
         token: authenticatedUserToken,
       });
-    } else 
-    {
+    } else {
       res.status(400).json({error: "Something went wrong"})
     }
   } catch (err) {
@@ -37,7 +39,11 @@ router.post("/register", async (req, res, next) =>
   }
 });
 
-// SIGN IN - POST to grab the user token and user with correct log in credentials
+
+
+
+// SIGN IN
+// POST /auth/login
 router.post("/login", async (req, res, next) => {
   try {
     const loggingUser = req.body.username;
@@ -54,21 +60,8 @@ router.post("/login", async (req, res, next) => {
 });
 
 
-// // SIGN OUT route for clearing token and isLoggedIn with backend
-// router.get( "/logout", requireToken, async (req, res, next) => {
-//   try {
-//     const currentUser = req.user.username
-// 		delete req.user
-//     res.status(200).json({
-//       message: `${currentUser} currently logged out`,
-//       isLoggedIn: false,
-//       token: "",
-//     });
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// });
-
 
 module.exports = router;
+
+
 

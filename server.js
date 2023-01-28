@@ -1,79 +1,27 @@
-///////////////////////////////
-// DEPENDENCIES
-////////////////////////////////
-
-// Initialize dotenv
-require("dotenv").config();
-
-// Import configuration to mongoDB using mongoose
-require("./config/db.connection");
-
-// Pull PORT from .env, Cors and morgan dependencies , Import express
-const { PORT } = process.env;
+const express = require('express')
+const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
-const express = require("express");
 
-// Import controllers and set them as variables
+//controller import
 const authController = require("./controllers/auth");
-const profileController = require('./controllers/profile-controller');
+const profileController = require('./controllers/profile-controller')
 
+require('dotenv').config()
+require('./config/db.connection')
 
-// Create application object as express
-const app = express();
+const { PORT } = process.env
 
-
-// For cross origin request - open channel , morgan request logger (for dev), and parse json data
-app.use(cors()) 
+// express, cors, morgan
+app.use(cors())
 app.use(morgan('dev'))
-app.use(express.json()) 
+
+// route middleware
+app.use(express.json())
+app.use('/auth', authController);
+app.use('/profile', profileController);
 
 
-// Controller middleware
-app.use('/auth', authController)
-app.use('/profile', profileController)
+app.get('/', (req, res) => res.redirect('/profile'))
 
-
-
-///////////////////////////////
-// ROUTES
-////////////////////////////////
-
-// // Reroute to /aggregate/ from /
-// app.get('/', (req, res)=>res.redirect('/aggregate'))
-
-// create a test route
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
-
-// Error handling / 404
-app.get('/error', (req,res)=>
-{
-  res.status(500).send('something went wrong...')
-})
-
-app.use((error, req,res,next)=>
-{
-  if(error)
-  {
-    return res.status(404).send(error.message)
-  }
-  next()
-})
-
-app.get('*', (req,res,next)=>
-{
-  if(req.error)
-  {
-    res.status(404).send(`Error: ${req.error.message}`)
-  }else 
-  {
-    res.redirect('/error/')
-  }
-})
-
-///////////////////////////////
-// LISTENER
-////////////////////////////////
-app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
+app.listen(PORT, ()=> console.log("on port"))
