@@ -15,8 +15,8 @@ const morgan = require('morgan')
 const express = require("express");
 
 // Import controllers and set them as variables
-// TODO add conroller like const authController = require("./controllers/auth");
-
+const authController = require("./controllers/auth");
+const profileController = require('./controllers/profile-controller');
 
 
 // Create application object as express
@@ -30,7 +30,8 @@ app.use(express.json())
 
 
 // Controller middleware
-// TODO add conroller middleware like app.use('/auth', authController)
+app.use('/auth', authController)
+app.use('/profile', profileController)
 
 
 
