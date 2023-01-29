@@ -42,7 +42,7 @@ socketIO.on('connection', (socket) => {
  socket.on('message', (data) => {
   console.log(data);
   socketIO.emit('messageResponse', data);
-});
+  });
 
   socket.on('disconnect', () => {
     console.log('🔥: A user disconnected');
