@@ -3,6 +3,11 @@ const Schema = mongoose.Schema;
 
 const ChatSchema = new Schema({
   textChat: String ,
+  chatRoomUserTwo: {
+    type: String,
+   // required: true
+    // unique: true,
+     },
       owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

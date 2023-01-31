@@ -8,7 +8,7 @@ const ChatRoomSchema = new Schema({
   chatRoomUserTwo: {
     type: String,
     required: true,
-    unique: true,
+    // unique: true,
   },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

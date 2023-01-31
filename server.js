@@ -15,7 +15,7 @@ const morgan = require('morgan')
 const authController = require("./controllers/auth");
 const profileController = require('./controllers/profile-controller')
 const chatController = require('./controllers/chat-controller')
-const chatRoomController = require('./controllers/chat-controller')
+// const chatRoomController = require('./controllers/chatroom-controller')
 
 // dotenv import
 require('dotenv').config()
@@ -42,7 +42,7 @@ app.use(express.json())
 app.use('/auth', authController);
 app.use('/profile', profileController);
 app.use('/chat', chatController);
-app.use('/chatroom', chatRoomController);
+// app.use('/chatroom', chatRoomController);
 
 
 // TODO ------------- Change Streams ---------------------
@@ -101,6 +101,10 @@ async function run() {
         case 'update':
           io.emit('messageResponse', next.updateDescription.updatedFields);
           console.log(next.updateDescription.updatedFields.textChat);
+        case 'delete':
+          io.emit('messageResponse', next.fullDocument);
+          console.log(next.fullDocument);
+          break;
       
           
       }

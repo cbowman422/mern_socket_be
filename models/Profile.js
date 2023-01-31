@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const ProfileSchema = new Schema(
 {
-  usernameProfile: String, 
+  usernameProfile: {
+        type: String }, 
   bioProfile: String,
       owner: 
       {
