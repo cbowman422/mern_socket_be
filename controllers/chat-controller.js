@@ -35,7 +35,6 @@ try {
 	const foundChat = await db.Chat.findById(req.params.id)
 	.populate("owner")
 	.exec();
-	console.log(foundChat)
 	res.status(200).json(foundChat)
 } catch (error) {
 	console.error(error)

@@ -35,7 +35,6 @@ try {
 	const foundProfile = await db.Profile.findById(req.params.id)
 	.populate("owner")
 	.exec();
-	console.log(foundProfile)
 	res.status(200).json(foundProfile)
 } catch (error) {
 	console.error(error)
@@ -52,8 +51,12 @@ router.post("/", requireToken, async (req, res, next) => {
 		// passport will verify the the token passed with the request's Authorization headers and set the current user for the request (req.user).
 		const owner = req.user._id
 		req.body.owner = owner
-    const newProfile = await db.Profile.create(req.body);
-    res.status(201).json(newProfile);
+
+		const usernameProfile = req.user.username
+		req.body.usernameProfile = usernameProfile
+
+    const newProfileBe = await db.Profile.create(req.body);
+    res.status(201).json(newProfileBe);
   } catch (err) {
     res.status(400).json({
       error: err.message,
